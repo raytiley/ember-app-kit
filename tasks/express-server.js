@@ -61,7 +61,11 @@ module.exports = function(grunt) {
       app.use(static({ file: 'dist/index.html' })); // Gotta catch 'em all
     }
 
-    var port = process.env.PORT || 8000;
+    var port = parseInt(process.env.PORT, 10);
+    if (isNaN(port) || port < 1 || port > 65535) {
+      port = 8000;
+      grunt.log.error('The PORT environment variable of %s is not valid. Defaulting to 8000.', process.env.PORT);
+    }
     app.listen(port);
     grunt.log.ok('Started development server on port %d.', port);
     if (!this.flags.keepalive) { done(); }
